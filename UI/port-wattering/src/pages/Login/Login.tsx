@@ -10,17 +10,36 @@ import {
   IonText,
   IonButton,
   IonIcon,
+  useIonToast,
 } from '@ionic/react';
 import { qrCodeOutline } from 'ionicons/icons';
-import { useState } from 'react';
-
+import { useState, useRef, useEffect } from 'react';
 import logo from '../../assets/photos/logo-real.png';
+import { UserManager } from '../../providers/local-providers/UserManager';
 import './Login.css';
 
-async function login(): Promise<void> {}
-
 const Login: React.FC = () => {
+  const userManager = new UserManager();
+
+  const passedValueRef = useRef<HTMLIonInputElement>(null);
+  passedValueRef?.current?.focus();
   const [password, setPassword] = useState<string>('');
+  const [present, dismiss] = useIonToast();
+
+  const login = () => {
+    if (
+      passedValueRef?.current?.value != '' &&
+      passedValueRef?.current?.value != null
+    ) {
+      userManager.login(passedValueRef?.current?.value as string);
+    } else {
+      present({
+        buttons: [{ text: 'zavřít', handler: () => dismiss() }],
+        message: 'zadejte prosím párovací číslo',
+      });
+    }
+  };
+
   return (
     <IonPage id='login-page'>
       <IonContent fullscreen>
@@ -44,14 +63,20 @@ const Login: React.FC = () => {
         <IonRow>
           <IonCol size='12'>
             <IonItem id='pass-input'>
-              <IonLabel position='floating'>zadejte heslo</IonLabel>
-              <IonInput value={password} clearInput required></IonInput>
+              <IonLabel position='floating'>zadejte párovací heslo</IonLabel>
+              <IonInput
+                ref={passedValueRef}
+                type='text'
+                value={password}
+                clearInput
+                required
+              ></IonInput>
             </IonItem>
           </IonCol>
         </IonRow>
         <IonRow>
           <IonCol class='ion-text-center'>
-            <IonButton>Přihlásit se</IonButton>
+            <IonButton onClick={() => login()}>Přihlásit se</IonButton>
           </IonCol>
           <IonCol class='ion-text-center'>
             <IonButton>

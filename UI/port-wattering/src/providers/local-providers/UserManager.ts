@@ -1,49 +1,15 @@
-import { StorageManager } from './StorageManager';
-
+import { APIUserProvider } from '../API-providers/api-user-provider';
+import { UserStorage } from './UserStorage';
 export class UserManager {
-  constructor(public storageManager: StorageManager) {}
+  private userStorage = new UserStorage();
+  private apiUserProvider = new APIUserProvider();
 
-  //setting
-
-  setUserToken(token: string): void {
-    this.storageManager.setLocalStorage('token', token);
-  }
-
-  setUserName(name: string): void {
-    this.storageManager.setLocalStorage('name', name);
-  }
-
-  setUserId(id: number): void {
-    this.storageManager.setLocalStorage('id', id);
-  }
-
-  setUserNumber(userNumber: string): void {
-    this.storageManager.setLocalStorage('user_nubmer', userNumber);
-  }
-
-  //getting
-
-  getUsertoken(): string | number {
-    return this.storageManager.getLocalStorage('token', '');
-  }
-
-  getUserName(): string | number {
-    return this.storageManager.getLocalStorage('name', '');
-  }
-
-  getUserId(): string | number {
-    return this.storageManager.getLocalStorage('id', 0);
-  }
-
-  getUserNumber(): string | number {
-    return this.storageManager.getLocalStorage('user_number', '');
-  }
-
-  //addition functions
-  clearUserStorage(): void {
-    this.setUserId(0);
-    this.setUserName('');
-    this.setUserNumber('');
-    this.setUserToken('');
+  login(userNumber: string): void {
+    this.apiUserProvider
+      .auth(userNumber)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      });
   }
 }

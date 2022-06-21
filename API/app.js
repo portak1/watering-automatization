@@ -1,6 +1,8 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const mysql = require('mysql');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
 const app = express();
 const con = mysql.createConnection({
@@ -9,6 +11,13 @@ const con = mysql.createConnection({
   password: '',
   database: 'port-watering',
 });
+
+app.use(
+  cors({
+    origin: '*',
+  })
+);
+app.use(bodyParser.json());
 
 app.get('/watering-api', (req, res) => {
   res.json({
@@ -30,12 +39,12 @@ app.post('/watering-api/pepega', verifyToken, (req, res) => {
 });
 
 app.post('/watering-api/login', (req, res) => {
-  var login_number = req.query.user_number;
+  var login_number = req.body.user_number;
   try {
     con.connect((err) => {
       if (err) {
         res.sendStatus(500);
-        console.log(err);
+        console.log('connection error');
       }
       con.query(
         'SELECT * FROM user WHERE user_number=' + mysql.escape(login_number),
