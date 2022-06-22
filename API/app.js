@@ -12,6 +12,9 @@ const con = mysql.createConnection({
   database: 'port-watering',
 });
 
+con.connect((err) => {
+  if (err) console.log(err);
+});
 app.use(
   cors({
     origin: '*',
@@ -41,36 +44,30 @@ app.post('/watering-api/pepega', verifyToken, (req, res) => {
 app.post('/watering-api/login', (req, res) => {
   var login_number = req.body.user_number;
   try {
-    con.connect((err) => {
-      if (err) {
-        res.sendStatus(500);
-        console.log('connection error');
-      }
-      con.query(
-        'SELECT * FROM user WHERE user_number=' + mysql.escape(login_number),
-        (err, result) => {
-          if (err) {
-            res.sendStatus(500);
-            console.log(err);
-          }
-          if (result[0] && result[0]?.id != undefined) {
-            let user = {
-              id: result[0]?.id,
-              user_number: result[0]?.user_number,
-              name: result[0].name,
-            };
-            jwt.sign({ user }, 'secretkey', (err, token) => {
-              res.json({
-                token,
-                user,
-              });
-            });
-          } else {
-            res.sendStatus(500);
-          }
+    con.query(
+      'SELECT * FROM user WHERE user_number=' + mysql.escape(login_number),
+      (err, result) => {
+        if (err) {
+          res.sendStatus(500);
+          console.log(err);
         }
-      );
-    });
+        if (result[0] && result[0]?.id != undefined) {
+          let user = {
+            id: result[0]?.id,
+            user_number: result[0]?.user_number,
+            name: result[0].name,
+          };
+          jwt.sign({ user }, 'secretkey', (err, token) => {
+            res.json({
+              token,
+              user,
+            });
+          });
+        } else {
+          res.sendStatus(500);
+        }
+      }
+    );
   } catch (error) {
     res.sendStatus(500);
   }

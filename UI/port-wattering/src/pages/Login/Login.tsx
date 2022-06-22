@@ -14,28 +14,49 @@ import {
 } from '@ionic/react';
 import { qrCodeOutline } from 'ionicons/icons';
 import { useState, useRef, useEffect } from 'react';
+import { useHistory } from 'react-router';
 import logo from '../../assets/photos/logo-real.png';
 import { UserManager } from '../../providers/local-providers/UserManager';
+import { UserStorage } from '../../providers/local-providers/UserStorage';
 import './Login.css';
 
 const Login: React.FC = () => {
   const userManager = new UserManager();
-
+  const userStorage = new UserStorage();
+  const history = useHistory();
   const passedValueRef = useRef<HTMLIonInputElement>(null);
   passedValueRef?.current?.focus();
   const [password, setPassword] = useState<string>('');
   const [present, dismiss] = useIonToast();
+
+  useEffect(() => {
+    if (userStorage.getUsertoken() != '') {
+      history.push('/home');
+    }
+  }, []);
 
   const login = () => {
     if (
       passedValueRef?.current?.value != '' &&
       passedValueRef?.current?.value != null
     ) {
-      userManager.login(passedValueRef?.current?.value as string);
+      userManager
+        .login(passedValueRef?.current?.value as string)
+        .then((data) => {
+          if (data) {
+            //redirect to /home
+            history.push('/home');
+          } else {
+            present({
+              buttons: [{ text: 'zavřít', handler: () => dismiss() }],
+              message: 'špatné párovací údaje.',
+            });
+          }
+        });
     } else {
       present({
         buttons: [{ text: 'zavřít', handler: () => dismiss() }],
-        message: 'zadejte prosím párovací číslo',
+        message: 'zadejte prosím párovací číslo.',
       });
     }
   };
