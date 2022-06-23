@@ -22,7 +22,6 @@ export class UserStorage {
   }
 
   //getting
-
   getUsertoken(): string | number {
     return this.storageManager.getLocalStorage('token', '');
   }

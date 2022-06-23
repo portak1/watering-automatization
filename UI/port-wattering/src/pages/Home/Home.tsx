@@ -5,12 +5,10 @@ import {
   IonTitle,
   IonToolbar,
   IonMenu,
-  IonRouterOutlet,
   IonMenuButton,
   IonItem,
   IonList,
   IonIcon,
-  IonButton,
   IonGrid,
   IonRow,
   IonCol,
@@ -18,9 +16,9 @@ import {
 } from '@ionic/react';
 import { useHistory } from 'react-router';
 import { water, logOut } from 'ionicons/icons';
+import { Redirect } from 'react-router';
 
 import { UserStorage } from '../../providers/local-providers/UserStorage';
-
 import './Home.css';
 import { UserManager } from '../../providers/local-providers/UserManager';
 
@@ -29,14 +27,15 @@ const Home: React.FC = () => {
   const userManager = new UserManager();
   const history = useHistory();
 
-  if (userStorage.getUsertoken() == '') {
-    history.push('/login');
-  }
-
   const logOutfc = () => {
+    console.log('pepega');
     userManager.logout();
     history.replace('/login');
   };
+
+  if (userStorage.getUsertoken() == '') {
+    return <Redirect to='/login' />;
+  }
 
   return (
     <>
