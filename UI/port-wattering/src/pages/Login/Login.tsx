@@ -13,8 +13,7 @@ import {
   useIonToast,
 } from '@ionic/react';
 import { qrCodeOutline } from 'ionicons/icons';
-import { useState, useRef } from 'react';
-import { Redirect } from 'react-router';
+import { useState, useRef, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import logo from '../../assets/photos/logo-real.png';
 import { UserManager } from '../../providers/local-providers/UserManager';
@@ -30,9 +29,11 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState<string>('');
   const [present, dismiss] = useIonToast();
 
-  if (userStorage.getUsertoken() != '') {
-    return <Redirect to='/home' />;
-  }
+  useEffect(() => {
+    if (userStorage.getUsertoken() != '') {
+      history.push('/home');
+    }
+  }, []);
 
   const login = () => {
     if (
@@ -48,14 +49,14 @@ const Login: React.FC = () => {
           } else {
             present({
               buttons: [{ text: 'zavřít', handler: () => dismiss() }],
-              message: 'Špatné párovací údaje',
+              message: 'špatné párovací údaje.',
             });
           }
         });
     } else {
       present({
         buttons: [{ text: 'zavřít', handler: () => dismiss() }],
-        message: 'Zadejte prosím párovací číslo',
+        message: 'zadejte prosím párovací číslo.',
       });
     }
   };
@@ -71,7 +72,7 @@ const Login: React.FC = () => {
         <IonRow>
           <IonCol class='ion-text-center'>
             <IonText color={'secondary'}>
-              <h1>Zavlažovací systém </h1>
+              <h1>zavlažovací systém </h1>
             </IonText>
             <IonText color={'primary'}>
               <h1>
@@ -83,7 +84,7 @@ const Login: React.FC = () => {
         <IonRow>
           <IonCol size='12'>
             <IonItem id='pass-input'>
-              <IonLabel position='floating'>Zadejte párovací heslo</IonLabel>
+              <IonLabel position='floating'>zadejte párovací heslo</IonLabel>
               <IonInput
                 ref={passedValueRef}
                 type='text'

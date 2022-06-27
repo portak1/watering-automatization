@@ -9,16 +9,8 @@ export class UserManager {
 
     await this.apiUserProvider
       .auth(userNumber)
-      .then((response) => {
-        if (response.status == 500) {
-          return response.status;
-        } else if (response.status == 401) {
-          return response.status;
-        }
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         if (data.token) {
           this.userStorage.setUserId(data.user.id);
           this.userStorage.setUserName(data.user.name);
