@@ -9,7 +9,7 @@ export class APIUserProvider {
     };
 
     return this.apiProvider.post(
-      'http://localhost:5000/watering-api/login',
+      '/login',
       JSON.stringify(body)
     );
   }

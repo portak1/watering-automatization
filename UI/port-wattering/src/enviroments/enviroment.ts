@@ -3,5 +3,5 @@ export const environment = {
 
   DEBUG: true,
 
-  API_ENDPOINT: 'http://localhost:5000/watering-api/',
+  API_ENDPOINT: 'http://localhost:5000/watering-api',
 };

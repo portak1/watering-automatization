@@ -28,15 +28,25 @@ app.get('/watering-api', (req, res) => {
   });
 });
 
-app.post('/watering-api/pepega', verifyToken, (req, res) => {
+app.post('/watering-api/sections', verifyToken, (req, res) => {
+  var user_id = req.body.user_id;
   jwt.verify(req.token, 'secretkey', (err, authData) => {
     if (err) {
       res.sendStatus(403);
     } else {
-      res.json({
-        message: 'Post created...',
-        authData,
-      });
+      con.query(
+        'SELECT * FROM section WHERE user_id=' + mysql.escape(user_id),
+        (err, result) => {
+          if (err) {
+            res.sendStatus(500);
+          } else {
+            res.json({
+              result,
+              authData,
+            });
+          }
+        }
+      );
     }
   });
 });

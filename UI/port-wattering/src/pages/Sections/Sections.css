@@ -1,0 +1,15 @@
+.water-icon{
+    margin-bottom: -3px !important;
+}
+
+.log-out{
+    font-size: 25px !important;
+}
+
+.section-card{
+    background-image: url('../../assets/photos/grass.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-blend-mode: overlay;
+}
